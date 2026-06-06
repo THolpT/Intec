@@ -22,13 +22,13 @@
             </label>
             <nav>
                 <ul class="nav-bar">
-                    <li class="nav-item"><a href="#">О нас</a></li>
-                    <li class="nav-item"><a href="#">Услуги</a></li>
-                    <li class="nav-item"><a href="#">Новости</a></li>
-                    <li class="nav-item"><a href="#">Акции</a></li>
-                    <li class="nav-item"><a href="#">Документы</a></li>
-                    <li class="nav-item"><a href="#">Отзывы</a></li>
-                    <li class="nav-item"><a href="#">Контакты</a></li>
+                    <li class="nav-item"><a href="#home">О нас</a></li>
+                    <li class="nav-item"><a href="#services">Услуги</a></li>
+                    <li class="nav-item"><a href="#news">Новости</a></li>
+                    <li class="nav-item"><a href="#promotions">Акции</a></li>
+                    <li class="nav-item"><a href="#documents">Документы</a></li>
+                    <li class="nav-item"><a href="#reviews">Отзывы</a></li>
+                    <li class="nav-item"><a href="#contacts">Контакты</a></li>
                 </ul>
                 <div class="mobile-contact">
                     <div>
@@ -54,13 +54,13 @@
         </div>
     </header>
     <main>
-        <section class="home">
+        <section class="home" id="home">
             <div class="home-container">
                 <h1 class="home-title">охрана труда пожарная безопасность обучение сотрудников</h1>
                 <img src="img/home.png" alt="Охрана труда и пожарная безопасность" class="home-img">
             </div>
         </section>
-        <section class="services">
+        <section class="services" id="services">
             <h2 class="services-section-title">Наши услуги</h2>
             <div class="services-bg-container">
                 <div class="services-container">
@@ -111,7 +111,7 @@
                 </div>
             </div>
         </section>
-        <section class="reviews">
+        <section class="reviews" id="reviews">
             <div class="reviews-left">
                 <h2 class="reviews-section-title">Отзывы клиентов</h2>
                 <div class="reviews-img-container">
@@ -130,7 +130,7 @@
             </div>
             <img src="img/review-bg.png" alt="Фон отзывов" class="reviews-right">
         </section>
-        <section class="projects">
+        <section class="projects" id="projects">
             <h2 class="projects-section-title">проекты</h2>
             <div class="project">
                 <div class="project-left-text">
@@ -159,7 +159,7 @@
                 <img src="img/orange-arrow.svg" alt="Стрелка">
             </div>
         </section>
-        <section class="news">
+        <section class="news" id="news">
             <div class="news-container">
                 <div class="news-heading">
                     <h2 class="news-section-title">Рубрика важных новостей</h2>
@@ -213,7 +213,7 @@
                 <img src="img/people2.png" alt="Сотрудник" class="second-question-img">
             </div>
         </section>
-        <section class="recomendations">
+        <section class="recomendations" id="recomendations">
             <div class="recomendations-container">
                 <h2 class="recomendations-section-title">ПОЛЕЗНЫЕ СТАТЬИ</h2>
                 <div class="recomendations-list">
@@ -245,7 +245,7 @@
                 <a href="#" class="recomendation-btn">Все статьи</a>
             </div>
         </section>
-        <section class="reviews">
+        <section class="reviews" id="certificates">
             <div class="reviews-left">
                 <h2 class="reviews-section-title">Сертификаты</h2>
                 <div class="reviews-img-container">
@@ -280,23 +280,23 @@
             </div>
         </section>
     </main>
-    <footer>
+    <footer id="contacts">
         <section class="top-footer">
             <ul class="footer-nav">
-                <li class="footer-nav-title"><a href="#">О нас</a></li>
-                <li><a href="#">Новости</a></li>
-                <li><a href="#">Статьи</a></li>
-                <li><a href="#">Сертификаты</a></li>
-                <li><a href="#">Объекты</a></li>
-                <li><a href="#">Склад</a></li>
+                <li class="footer-nav-title"><a href="#home">О нас</a></li>
+                <li><a href="#news">Новости</a></li>
+                <li><a href="#recomendations">Статьи</a></li>
+                <li><a href="#certificates">Сертификаты</a></li>
+                <li><a href="#projects">Объекты</a></li>
+                <li><a href="#warehouse">Склад</a></li>
             </ul>
             <ul class="footer-nav">
-                <li class="footer-nav-title"><a href="#">Каталог</a></li>
-                <li><a href="#">Прайсы</a></li>
-                <li><a href="#">Акции</a></li>
+                <li class="footer-nav-title"><a href="#catalog">Каталог</a></li>
+                <li><a href="#prices">Прайсы</a></li>
+                <li><a href="#promotions">Акции</a></li>
             </ul>
             <ul class="footer-nav">
-                <li class="footer-nav-title"><a href="#">Контакты</a></li>
+                <li class="footer-nav-title"><a href="#contacts">Контакты</a></li>
             </ul>
             <div class="footer-contacts-container">
                 <div class="search-bar">
@@ -330,6 +330,11 @@
             <p class="hidden">© 2020 Universe, Все права защищены</p>
         </section>
     </footer>
+    <div id="promotions" style="display: none;"></div>
+    <div id="documents" style="display: none;"></div>
+    <div id="warehouse" style="display: none;"></div>
+    <div id="catalog" style="display: none;"></div>
+    <div id="prices" style="display: none;"></div>
 </body>
 
 </html>
