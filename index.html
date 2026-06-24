@@ -335,6 +335,140 @@
     <div id="warehouse" style="display: none;"></div>
     <div id="catalog" style="display: none;"></div>
     <div id="prices" style="display: none;"></div>
+
+    <script>
+        window.addEventListener('load', function () {
+          function initInfiniteSlider(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+        
+            const container = section.querySelector('.reviews-img-container');
+            if (!container || container.children.length === 0) return;
+        
+            const prevBtn = section.querySelector('.left-arrow');
+            const nextBtn = section.querySelector('.right-arrow');
+        
+            const originalSlides = Array.from(container.children);
+            const originalCount = originalSlides.length; // 3
+            const gap = 47; // соответствует gap в CSS
+        
+            // Ширина одного слайда после загрузки
+            let slideWidth = originalSlides[0].offsetWidth;
+            if (slideWidth === 0) slideWidth = 200; // fallback
+        
+            // Создаём обёртку, которая ограничит видимую область
+            const wrapper = document.createElement('div');
+            wrapper.style.overflow = 'hidden';
+            wrapper.style.maxWidth = '100%';
+        
+            // Вставляем wrapper перед container
+            container.parentNode.insertBefore(wrapper, container);
+            wrapper.appendChild(container);
+        
+            // Клонируем слайды для бесконечной прокрутки
+            // Клоны в конец
+            originalSlides.forEach(slide => {
+              container.appendChild(slide.cloneNode(true));
+            });
+            // Клоны в начало
+            originalSlides.forEach(slide => {
+              container.insertBefore(slide.cloneNode(true), container.firstChild);
+            });
+        
+            // Начальный индекс — указывает на первый оригинальный слайд
+            let currentIndex = originalCount;
+            let isTransitioning = false;
+            let autoplayInterval;
+        
+            container.style.display = 'flex';
+            container.style.flexDirection = 'row';
+            container.style.gap = gap + 'px';
+            container.style.willChange = 'transform';
+        
+            // Функция расчёта ширины видимой области (три слайда)
+            function getVisibleWidth() {
+              const sWidth = originalSlides[0]?.offsetWidth || slideWidth;
+              return sWidth * originalCount + gap * (originalCount - 1);
+            }
+        
+            // Устанавливаем ширину wrapper
+            function updateWrapperWidth() {
+              wrapper.style.width = getVisibleWidth() + 'px';
+            }
+        
+            function updatePosition(animate) {
+              container.style.transition = animate
+                ? 'transform 0.5s ease-in-out'
+                : 'none';
+              const currentSlideUnit = (originalSlides[0]?.offsetWidth || slideWidth) + gap;
+              container.style.transform = `translateX(${-currentIndex * currentSlideUnit}px)`;
+            }
+        
+            function next() {
+              if (isTransitioning) return;
+              isTransitioning = true;
+              currentIndex++;
+              updatePosition(true);
+            }
+        
+            function prev() {
+              if (isTransitioning) return;
+              isTransitioning = true;
+              currentIndex--;
+              updatePosition(true);
+            }
+        
+            function resetAutoplay() {
+              clearInterval(autoplayInterval);
+              autoplayInterval = setInterval(next, 3000);
+            }
+        
+            // Обработка завершения перехода для зацикливания
+            container.addEventListener('transitionend', function () {
+              isTransitioning = false;
+              // Перескок с клонов на оригиналы
+              if (currentIndex >= originalCount * 2) {
+                currentIndex = originalCount;
+                updatePosition(false);
+              } else if (currentIndex < originalCount) {
+                currentIndex = originalCount * 2 - 1;
+                updatePosition(false);
+              }
+            });
+        
+            // Инициализация размеров и позиции
+            updateWrapperWidth();
+            updatePosition(false);
+            autoplayInterval = setInterval(next, 3000);
+        
+            // Кнопки
+            if (nextBtn) {
+              nextBtn.addEventListener('click', () => { resetAutoplay(); next(); });
+            }
+            if (prevBtn) {
+              prevBtn.addEventListener('click', () => { resetAutoplay(); prev(); });
+            }
+        
+            // Пауза при наведении
+            wrapper.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+            wrapper.addEventListener('mouseleave', () => { autoplayInterval = setInterval(next, 3000); });
+        
+            // Корректировка при ресайзе
+            window.addEventListener('resize', () => {
+              updateWrapperWidth();
+              const newSlideUnit = (originalSlides[0]?.offsetWidth || slideWidth) + gap;
+              container.style.transition = 'none';
+              container.style.transform = `translateX(${-currentIndex * newSlideUnit}px)`;
+              container.offsetHeight; // reflow
+              container.style.transition = 'transform 0.5s ease-in-out';
+            });
+          }
+        
+          // Запускаем оба слайдера
+          initInfiniteSlider('reviews');
+          initInfiniteSlider('certificates');
+        });
+        </script>
 </body>
 
 </html>
