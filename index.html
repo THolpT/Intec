@@ -201,14 +201,14 @@
         <section class="questions">
             <div>
                 <img src="img/people1.png" alt="Сотрудник" class="first-question-img">
-                <form action="">
+                <form action="" id="question-form" novalidate>
                     <h2 class="question-title">Вопросы?</h2>
                     <p class="question-description">Оставьте заявку и мы с Вами свяжемся</p>
                     <div>
-                        <input type="text" placeholder="Ваше имя">
-                        <input type="tel" placeholder="+7 (123) 456 78 89">
+                        <input type="text" id="name-input" placeholder="Ваше имя" required minlength="2">
+                        <input type="tel" id="phone-input" placeholder="+7 (123) 456 78 89" required pattern="[\+0-9\(\)\-\s]{10,}">
                     </div>
-                    <button class="question-btn">оставить заявку</button>
+                    <button type="submit" class="question-btn">оставить заявку</button>
                 </form>
                 <img src="img/people2.png" alt="Сотрудник" class="second-question-img">
             </div>
@@ -442,14 +442,48 @@
               const newSlideUnit = (originalSlides[0]?.offsetWidth || slideWidth) + gap;
               container.style.transition = 'none';
               container.style.transform = `translateX(${-currentIndex * newSlideUnit}px)`;
-              container.offsetHeight; // reflow
+              container.offsetHeight; 
               container.style.transition = 'transform 0.5s ease-in-out';
             });
           }
-        
-          // Запускаем оба слайдера
           initInfiniteSlider('reviews');
           initInfiniteSlider('certificates');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('question-form');
+            const nameInput = document.getElementById('name-input');
+            const phoneInput = document.getElementById('phone-input');
+
+            function clearErrors() {
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                clearErrors();
+
+                let errors = [];
+
+                const name = nameInput.value.trim();
+                if (name.length < 2) {
+                    errors.push('Имя должно содержать не менее 2 символов');
+                }
+
+                const phoneRaw = phoneInput.value.trim();
+                const digits = phoneRaw.replace(/\D/g, '');
+                if (digits.length < 10 || digits.length > 15) {
+                    errors.push('Введите корректный номер телефона (от 10 до 15 цифр)');
+                }
+
+                if (errors.length > 0) {
+                    alert('Ошибка в форме:\n\n' + errors.join('\n'));
+                } else {
+                    alert('Заявка успешно отправлена!');
+                }
+            });
+
+            nameInput.addEventListener('input', clearErrors);
+            phoneInput.addEventListener('input', clearErrors);
         });
         </script>
 </body>
