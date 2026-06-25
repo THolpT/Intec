@@ -1,13 +1,9 @@
-/* ===== Адаптивные стили (добавляются в конец style.css) ===== */
-
-/* --- Базовые стили для бургер-меню (скрыты на больших экранах) --- */
 .burger-toggle,
 .burger-icon,
 .mobile-contact {
   display: none;
 }
 
-/* Планшеты и небольшие экраны (≤1280px) */
 @media screen and (max-width: 1280px) {
   .reviews-right { display: none; }
   .services-bg-container { background-image: none; }
@@ -202,9 +198,7 @@
   .bottom-footer .hidden { display: none; }
 }
 
-/* Мобильные устройства (≤768px) */
 @media screen and (max-width: 768px) {
-  /* --- Бургер-меню --- */
   .header-container {
     position: relative;
     flex-wrap: nowrap;
@@ -238,14 +232,12 @@
     transition: 0.3s;
   }
 
-  /* Скрываем навигацию и контакты на мобильных по умолчанию */
   nav .nav-bar,
   .mobile-contact,
   .header-contact {
     display: none;
   }
 
-  /* Показываем меню при активации чекбокса */
   .burger-toggle:checked ~ nav .nav-bar,
   .burger-toggle:checked ~ nav .mobile-contact {
     display: flex;
@@ -268,7 +260,6 @@
     margin-bottom: 20px;
   }
 
-  /* Стилизация мобильного блока контактов в меню */
   .mobile-contact {
     border-top: 1px solid rgba(0,0,0,0.1);
     padding-top: 15px;
@@ -292,7 +283,6 @@
     margin-top: 10px;
   }
 
-  /* --- Остальные мобильные правки --- */
   .questions {
     background-image: none;
     min-height: auto;
@@ -393,14 +383,11 @@
   }
 }
 
-/* Маленькие мобильные (≤480px) */
 @media screen and (max-width: 480px) {
-  /* Статьи в 1 колонку */
   .recomendations-list {
     grid-template-columns: 1fr;
   }
 
-  /* Форма вопросов – убираем боковые отступы, строго по центру */
   .questions > div {
     width: 100%;
     padding: 0 15px;
@@ -411,8 +398,7 @@
     width: 100%;
     max-width: 100%;
   }
-
-  /* Убираем любую возможность горизонтального скролла */
+  
   html, body {
     overflow-x: hidden;
     width: 100%;
