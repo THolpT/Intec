@@ -337,118 +337,138 @@
     <div id="prices" style="display: none;"></div>
 
     <script>
-        window.addEventListener('load', function () {
-          function initInfiniteSlider(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (!section) return;
-        
-            const container = section.querySelector('.reviews-img-container');
-            if (!container || container.children.length === 0) return;
-        
-            const prevBtn = section.querySelector('.left-arrow');
-            const nextBtn = section.querySelector('.right-arrow');
-        
-            const originalSlides = Array.from(container.children);
-            const originalCount = originalSlides.length;
-            const gap = 47;
-        
-            let slideWidth = originalSlides[0].offsetWidth;
-            if (slideWidth === 0) slideWidth = 200;
-        
-            const wrapper = document.createElement('div');
-            wrapper.style.overflow = 'hidden';
-            wrapper.style.maxWidth = '100%';
-        
-            container.parentNode.insertBefore(wrapper, container);
-            wrapper.appendChild(container);
-        
-            originalSlides.forEach(slide => {
-              container.appendChild(slide.cloneNode(true));
-            });
-            originalSlides.forEach(slide => {
-              container.insertBefore(slide.cloneNode(true), container.firstChild);
-            });
-        
-            let currentIndex = originalCount;
-            let isTransitioning = false;
-            let autoplayInterval;
-        
-            container.style.display = 'flex';
-            container.style.flexDirection = 'row';
-            container.style.gap = gap + 'px';
-            container.style.willChange = 'transform';
-    
-            function getVisibleWidth() {
-              const sWidth = originalSlides[0]?.offsetWidth || slideWidth;
-              return sWidth * originalCount + gap * (originalCount - 1);
-            }
-        
-            function updateWrapperWidth() {
-              wrapper.style.width = getVisibleWidth() + 'px';
-            }
-        
-            function updatePosition(animate) {
-              container.style.transition = animate
-                ? 'transform 0.5s ease-in-out'
-                : 'none';
-              const currentSlideUnit = (originalSlides[0]?.offsetWidth || slideWidth) + gap;
-              container.style.transform = `translateX(${-currentIndex * currentSlideUnit}px)`;
-            }
-        
-            function next() {
-              if (isTransitioning) return;
-              isTransitioning = true;
-              currentIndex++;
-              updatePosition(true);
-            }
-        
-            function prev() {
-              if (isTransitioning) return;
-              isTransitioning = true;
-              currentIndex--;
-              updatePosition(true);
-            }
-        
-            function resetAutoplay() {
-              clearInterval(autoplayInterval);
-              autoplayInterval = setInterval(next, 3000);
-            }
-        
-            container.addEventListener('transitionend', function () {
-              isTransitioning = false;
-              if (currentIndex >= originalCount * 2) {
-                currentIndex = originalCount;
-                updatePosition(false);
-              } else if (currentIndex < originalCount) {
-                currentIndex = originalCount * 2 - 1;
-                updatePosition(false);
-              }
-            });
-        
-            updateWrapperWidth();
-            updatePosition(false);
-            autoplayInterval = setInterval(next, 3000);
-        
-            if (nextBtn) {
-              nextBtn.addEventListener('click', () => { resetAutoplay(); next(); });
-            }
-            if (prevBtn) {
-              prevBtn.addEventListener('click', () => { resetAutoplay(); prev(); });
-            }
-            wrapper.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
-            wrapper.addEventListener('mouseleave', () => { autoplayInterval = setInterval(next, 3000); });
-            window.addEventListener('resize', () => {
-              updateWrapperWidth();
-              const newSlideUnit = (originalSlides[0]?.offsetWidth || slideWidth) + gap;
-              container.style.transition = 'none';
-              container.style.transform = `translateX(${-currentIndex * newSlideUnit}px)`;
-              container.offsetHeight; 
-              container.style.transition = 'transform 0.5s ease-in-out';
-            });
-          }
-          initInfiniteSlider('reviews');
-          initInfiniteSlider('certificates');
-        });
+        (function() {
+  function initSlider(sectionId) {
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    var container = section.querySelector('.reviews-img-container');
+    if (!container || container.children.length === 0) return;
+    var prevBtn = section.querySelector('.left-arrow');
+    var nextBtn = section.querySelector('.right-arrow');
+
+    container.style.display = 'flex';
+    container.style.flexDirection = 'row';
+    container.style.flexWrap = 'nowrap';
+    container.style.gap = '47px';
+
+    var slides = container.children;
+    for (var i = 0; i < slides.length; i++) {
+      slides[i].style.flexShrink = '0';
+      slides[i].style.width = 'auto';
+      slides[i].style.maxWidth = 'none';
+      slides[i].style.height = 'auto';
+    }
+
+    var originalSlides = Array.prototype.slice.call(slides);
+    var originalCount = originalSlides.length;
+    var gap = 47;
+
+    function getSlideWidth() {
+      return originalSlides[0] ? originalSlides[0].offsetWidth : 0;
+    }
+
+    var wrapper = document.createElement('div');
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.maxWidth = '100%';
+    container.parentNode.insertBefore(wrapper, container);
+    wrapper.appendChild(container);
+
+    var attempts = 0;
+    function waitForWidth(callback) {
+      var w = getSlideWidth();
+      if (w > 0 || attempts >= 10) {
+        callback(w || 200);
+      } else {
+        attempts++;
+        requestAnimationFrame(function() { waitForWidth(callback); });
+      }
+    }
+
+    waitForWidth(function(slideWidth) {
+      var slideUnit = slideWidth + gap;
+      var visibleWidth = slideWidth * originalCount + gap * (originalCount - 1);
+      wrapper.style.width = visibleWidth + 'px';
+
+      for (var i = 0; i < originalCount; i++) {
+        container.appendChild(originalSlides[i].cloneNode(true));
+      }
+      for (var j = 0; j < originalCount; j++) {
+        container.insertBefore(originalSlides[j].cloneNode(true), container.firstChild);
+      }
+
+      var currentIndex = originalCount;
+      var isTransitioning = false;
+      var autoplayTimer;
+
+      function setPosition(animate) {
+        container.style.transition = animate ? 'transform 0.5s ease-in-out' : 'none';
+        container.style.transform = 'translateX(' + (-currentIndex * slideUnit) + 'px)';
+      }
+
+      function next() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex++;
+        setPosition(true);
+      }
+
+      function prev() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex--;
+        setPosition(true);
+      }
+
+      function resetAutoplay() {
+        clearInterval(autoplayTimer);
+        autoplayTimer = setInterval(next, 3000);
+      }
+
+      container.addEventListener('transitionend', function() {
+        isTransitioning = false;
+        if (currentIndex >= originalCount * 2) {
+          currentIndex = originalCount;
+          setPosition(false);
+        } else if (currentIndex < originalCount) {
+          currentIndex = originalCount * 2 - 1;
+          setPosition(false);
+        }
+      });
+
+      setPosition(false);
+      autoplayTimer = setInterval(next, 3000);
+
+      if (nextBtn) nextBtn.addEventListener('click', function() { resetAutoplay(); next(); });
+      if (prevBtn) prevBtn.addEventListener('click', function() { resetAutoplay(); prev(); });
+
+      wrapper.addEventListener('mouseenter', function() { clearInterval(autoplayTimer); });
+      wrapper.addEventListener('mouseleave', function() { autoplayTimer = setInterval(next, 3000); });
+
+      window.addEventListener('resize', function() {
+        var newSlideWidth = getSlideWidth() || slideWidth;
+        var newSlideUnit = newSlideWidth + gap;
+        var newVisibleWidth = newSlideWidth * originalCount + gap * (originalCount - 1);
+        wrapper.style.width = newVisibleWidth + 'px';
+        container.style.transition = 'none';
+        container.style.transform = 'translateX(' + (-currentIndex * newSlideUnit) + 'px)';
+        container.offsetHeight;
+        container.style.transition = 'transform 0.5s ease-in-out';
+        slideWidth = newSlideWidth;
+        slideUnit = newSlideUnit;
+      });
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    initSlider('reviews');
+    initSlider('certificates');
+  } else {
+    window.addEventListener('load', function() {
+      initSlider('reviews');
+      initSlider('certificates');
+    });
+  }
+})();
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('question-form');
